@@ -3,6 +3,7 @@ from typing import List, Optional, Dict, Any, Union
 from datetime import datetime
 from enum import Enum
 from decimal import Decimal
+from expense import ExpenseCategory
 
 class MetricPeriod(str, Enum):
     DAILY = "daily"

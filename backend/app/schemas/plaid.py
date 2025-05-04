@@ -4,6 +4,10 @@ from datetime import datetime
 from enum import Enum
 from decimal import Decimal
 
+class TransactionType(str, Enum):
+    EXPENSE = "expense"
+    INCOME = "income"
+
 class PlaidCredentials(BaseModel):
     user_id: int
     access_token: str
