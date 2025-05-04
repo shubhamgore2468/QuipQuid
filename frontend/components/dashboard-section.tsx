@@ -1,5 +1,6 @@
 import { ArrowUpRight, DollarSign, TrendingDown, TrendingUp } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import Link from "next/link"
 
 export function DashboardSection() {
   return (
@@ -61,10 +62,10 @@ export function DashboardSection() {
       </Card>
 
       <div className="flex justify-end">
-        <button className="flex items-center text-sm text-primary font-medium">
+        <Link href="/dashboard" className="flex items-center text-sm text-primary font-medium">
           View full dashboard
           <ArrowUpRight className="ml-1 h-4 w-4" />
-        </button>
+        </Link>
       </div>
     </div>
   )

@@ -6,7 +6,7 @@ import { Progress } from "@/components/ui/progress"
 export function GoalsSection() {
   return (
     <div className="space-y-4">
-      <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100">Goals</h2>
+      <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100">Streak</h2>
 
       {/* Rewards and Streaks Section */}
       <Card className="bg-gradient-to-r from-purple-500/10 to-purple-600/5 border-purple-200 dark:border-purple-900">
@@ -60,7 +60,7 @@ export function GoalsSection() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Budget Goals</CardTitle>
+          <CardTitle>Budget</CardTitle>
           <CardDescription>This month's budget targets</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">

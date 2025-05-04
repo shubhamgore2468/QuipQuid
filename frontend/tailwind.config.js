@@ -84,6 +84,14 @@ module.exports = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
+      // added
+      fontFamily: {
+        sans: ['Inter', 'ui-sans-serif', 'system-ui'],
+        serif: ['Merriweather', 'serif'],
+        mono: ['Fira Code', 'monospace'],
+        // you can also add a custom “display” or “heading” stack:
+        heading: ['Oswald', 'sans-serif'],
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],

@@ -4,7 +4,7 @@ import type React from "react"
 import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { BarChart3, Target, Settings, HelpCircle, Menu, X, Home, PieChart, History, MessageSquare } from "lucide-react"
+import { BarChart3, Target, Settings, HelpCircle, Menu, X, Home, PieChart, History, Split } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 export function Sidebar() {
@@ -18,11 +18,11 @@ export function Sidebar() {
   return (
     <>
       {/* Mobile overlay */}
-      {isOpen && <div className="fixed inset-0 bg-black/50 z-40 lg:hidden" onClick={() => setIsOpen(false)} />}
+      {isOpen && <div className="fixed inset-0 bg-black/50 z-40 md:hidden" onClick={() => setIsOpen(false)} />}
 
       {/* Mobile toggle button */}
       <button
-        className="fixed top-4 left-4 z-50 rounded-md p-2 bg-[#6C16C7] text-white lg:hidden"
+        className="fixed top-4 left-4 z-50 rounded-md p-2 bg-[#6C16C7] text-white md:hidden"
         onClick={toggleSidebar}
       >
         {isOpen ? <X size={20} /> : <Menu size={20} />}
@@ -31,7 +31,7 @@ export function Sidebar() {
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-40 w-64 bg-gradient-to-b from-[#6C16C7] to-[#5A12A7] text-white shadow-lg transform transition-transform duration-200 ease-in-out lg:translate-x-0 lg:static lg:h-screen",
+          "fixed inset-y-0 left-0 z-40 w-64 bg-gradient-to-b from-[#6C16C7] to-[#5A12A7] text-white shadow-lg transform transition-transform duration-200 ease-in-out md:translate-x-0 md:static md:h-screen",
           isOpen ? "translate-x-0" : "-translate-x-full",
         )}
       >
@@ -55,11 +55,11 @@ export function Sidebar() {
             <NavItem href="/goals" icon={<Target />} active={pathname === "/goals"}>
               Goals
             </NavItem>
+            <NavItem href="/split" icon={<Split />} active={pathname === "/split"}>
+              Split
+            </NavItem>
             <NavItem href="/history" icon={<History />} active={pathname === "/history"}>
               History
-            </NavItem>
-            <NavItem href="/chat" icon={<MessageSquare />} active={pathname === "/chat"}>
-              Chat
             </NavItem>
             <NavItem href="/settings" icon={<Settings />} active={pathname === "/settings"}>
               Settings
