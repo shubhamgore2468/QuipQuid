@@ -24,6 +24,8 @@
     --input: 276 20% 92%;
     --ring: 276 80% 43%;
     --radius: 0.5rem;
+    --sidebar: 276 80% 43%;
+    --sidebar-foreground: 0 0% 100%;
   }
 
   .dark {
@@ -46,6 +48,8 @@
     --border: 276 30% 20%;
     --input: 276 30% 20%;
     --ring: 276 80% 50%;
+    --sidebar: 276 80% 43%;
+    --sidebar-foreground: 0 0% 100%;
   }
 }
 
@@ -54,7 +58,7 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
   }
 }
 
