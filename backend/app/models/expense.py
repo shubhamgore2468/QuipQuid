@@ -46,4 +46,4 @@ class Expense(Base):
     processed_text = Column(String, nullable=True)  # For storing extracted text
     
     # Relationship with User model
-    user = relationship("User", backref="expenses")
+    user = relationship("User", back_populates="expenses")

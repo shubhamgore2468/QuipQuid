@@ -24,7 +24,7 @@ class InputType(str, Enum):
     IMAGE = "image"
 
 class ExpenseBase(BaseModel):
-    amount = Field(..., description="Expense amount")
+    amount: float = Field(..., description="Expense amount")
     category: ExpenseCategory
     description: Optional[str] = None
     merchant: Optional[str] = None
