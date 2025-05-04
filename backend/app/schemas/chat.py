@@ -1,16 +1,22 @@
-from datetime import datetime, timezone
-from typing import List, Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, EmailStr, HttpUrl, condecimal
+from typing import List, Optional, Dict, Any, Union
+from datetime import datetime
+from enum import Enum
+from decimal import Decimal
+
+class ChatRole(str, Enum):
+    USER = "user"
 
 class ChatMessage(BaseModel):
-    role: str  # 'user' or 'assistant'
+    role: ChatRole
     content: str
-    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    timestamp: datetime = Field(default_factory=datetime.utcnow)
+    metadata: Optional[Dict[str, Any]] = None
 
 class ChatSession(BaseModel):
-    user_id: int
     session_id: str
+    user_id: int
     messages: List[ChatMessage]
-    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-    context: Optional[dict] = None  # For storing RAG context
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+    context: Optional[Dict[str, Any]] = None

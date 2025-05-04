@@ -15,6 +15,7 @@ class TestDatabaseConnections:
 
     def test_postgresql_connection(self):
         """Test the PostgreSQL connection."""
+        print()
         try:
             with engine.connect() as connection:
                 result = connection.execute(text("SELECT 1"))
@@ -68,4 +69,4 @@ if __name__ == "__main__":
 
     # Run MongoDB test (async)
     print("Testing MongoDB connection...")
-    asyncio.run(test_instance.test_mongodb_connection())
+    asyncio.run(test_instance.test_monogodb_connection())
