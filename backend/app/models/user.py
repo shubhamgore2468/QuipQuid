@@ -1,6 +1,9 @@
+import sys
+sys.path.append("..")
+
 from sqlalchemy import Column, Integer, String, DateTime, Boolean
 from sqlalchemy.sql import func
-from app.db.postgresql import Base
+from db.postgresql import Base
 
 class User(Base):
     __tablename__ = 'users'
