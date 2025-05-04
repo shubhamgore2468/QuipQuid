@@ -1,4 +1,4 @@
-import { ChatBar } from "@/components/chat-bar"
+import { ThemeToggle } from "@/components/theme-toggle"
 
 export default function SettingsPage() {
   return (
@@ -105,10 +105,22 @@ export default function SettingsPage() {
                 </div>
               </form>
             </div>
+
+            {/* Theme Settings Card */}
+            <div className="bg-white dark:bg-slate-800 rounded-lg shadow p-6 mt-6">
+              <h2 className="text-xl font-semibold mb-6">Appearance</h2>
+
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="font-medium">Theme</h3>
+                  <p className="text-sm text-slate-500 dark:text-slate-400">Toggle between light and dark mode</p>
+                </div>
+                <ThemeToggle className="h-10 w-10" />
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <ChatBar />
     </>
   )
 }
