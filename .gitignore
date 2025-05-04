@@ -1,5 +1,8 @@
-/Users/shubhamgore/Development/QuipQuid/backend/app/__pycache__
-/Users/shubhamgore/Development/QuipQuid/backend/app/core/__pycache__
-/Users/shubhamgore/Development/QuipQuid/backend/app/db/__pycache__
-/Users/shubhamgore/Development/QuipQuid/backend/app/tests/__pycache__
+# Environment variables
+.env
+.venv
 
+# Logging
+logs/
+*.log
+*.log.*
