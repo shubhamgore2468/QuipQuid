@@ -1,2 +1,8 @@
+# Environment variables
 .env
 .venv
+
+# Logging
+logs/
+*.log
+*.log.*
