@@ -18,7 +18,7 @@ class Settings(BaseSettings):
 
 
     class Config:
-        env_file = ".env"
+        env_file = "/Users/shubhamgore/Development/QuipQuid/backend/.env"
         case_sensitive = True
 
 settings = Settings()
