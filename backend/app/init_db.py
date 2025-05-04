@@ -6,6 +6,7 @@ sys.path.append(".")
 from db.postgresql import Base, engine
 from models.user import User
 from models.expense import Expense
+from models.transactions import Transaction
 
 def init_db():
     """Initialize the database by creating all tables."""
@@ -14,7 +15,7 @@ def init_db():
     try:
         # Create all tables
         Base.metadata.create_all(bind=engine)
-        print("✅ Database tables created successfully!")
+        print("Database tables created successfully!")
         
         # Show created tables
         print("\nCreated tables:")
