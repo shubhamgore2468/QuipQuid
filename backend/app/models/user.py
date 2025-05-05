@@ -1,11 +1,7 @@
-import sys
-sys.path.append("..")
-
 from sqlalchemy import Column, Integer, String, DateTime, Boolean
 from sqlalchemy.sql import func
-from app.db.postgresql import Base
 from sqlalchemy.orm import relationship
-
+from app.db.postgresql import Base
 
 class User(Base):
     __tablename__ = 'users'
@@ -19,5 +15,6 @@ class User(Base):
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
     plaid_access_token = Column(String, nullable=True)
 
+    # Use string references for relationships to avoid circular imports
     expenses = relationship("Expense", back_populates="user")
     transactions = relationship("Transaction", back_populates="user")

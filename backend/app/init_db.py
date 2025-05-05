@@ -1,12 +1,17 @@
 # backend/app/init_db.py
 
 import sys
-sys.path.append(".")
+import os
 
-from db.postgresql import Base, engine
-from models.user import User
-from models.expense import Expense
-from models.transactions import Transaction
+# Add the parent directory to Python path to make imports work
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+sys.path.insert(0, parent_dir)
+
+from app.db.postgresql import Base, engine
+from app.models.user import User
+from app.models.expense import Expense
+from app.models.transactions import Transaction
 
 def init_db():
     """Initialize the database by creating all tables."""
