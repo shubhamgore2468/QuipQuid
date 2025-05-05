@@ -8,8 +8,6 @@ from app.schemas.expense import ExpenseCategory
 # Base schema with common fields
 class TransactionBase(BaseModel):
     item_name: str
-    unit_price: float = Field(gt=0, description="Price per unit")
-    quantity: int = Field(gt=0, description="Quantity of items")
     amount: float = Field(gt=0, description="Amount this user owes for this item")
     merchant_name: str
     category: ExpenseCategory
@@ -25,8 +23,6 @@ class TransactionCreate(TransactionBase):
 # Schema for updating a transaction
 class TransactionUpdate(BaseModel):
     item_name: Optional[str] = None
-    unit_price: Optional[float] = Field(None, gt=0)
-    quantity: Optional[int] = Field(None, gt=0)
     amount: Optional[float] = Field(None, gt=0)
     merchant_name: Optional[str] = None
     category: Optional[ExpenseCategory] = None

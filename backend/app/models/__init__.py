@@ -6,6 +6,8 @@ from app.db.postgresql import Base
 from app.models.user import User
 from app.models.expense import Expense, ExpenseCategory, ExpenseType
 from app.models.transactions import Transaction
+from app.models.budget import Budget
+from app.models.goal import Goal
 
 # Make sure all models are available for import
 __all__ = [
@@ -14,5 +16,7 @@ __all__ = [
     'Expense', 
     'Transaction',
     'ExpenseCategory',
-    'ExpenseType'
+    'ExpenseType',
+    'Budget',
+    'Goal'
 ]
