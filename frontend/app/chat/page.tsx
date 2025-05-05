@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react"
 import { ArrowLeft, Bot, User, Search, History, X } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { ChatBar } from "@/components/chat-bar"
+import { FloatingChatBar } from "@/components/floating-chat-bar"
 
 interface Message {
   id: string
@@ -11,6 +11,7 @@ interface Message {
   sender: "user" | "assistant"
   timestamp: Date
   image?: string
+  isStreaming?: boolean
 }
 
 interface ChatSession {
@@ -69,6 +70,72 @@ export default function ChatPage() {
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
+  // Simulate streaming effect when a new message is added
+  useEffect(() => {
+    const lastMessage = messages[messages.length - 1]
+
+    if (lastMessage && lastMessage.isStreaming) {
+      const fullContent = lastMessage.content
+      let currentContent = ""
+      let charIndex = 0
+
+      const streamInterval = setInterval(() => {
+        if (charIndex < fullContent.length) {
+          currentContent += fullContent[charIndex]
+          charIndex++
+
+          setMessages((prev) =>
+            prev.map((msg) => (msg.id === lastMessage.id ? { ...msg, content: currentContent } : msg)),
+          )
+        } else {
+          clearInterval(streamInterval)
+          setMessages((prev) => prev.map((msg) => (msg.id === lastMessage.id ? { ...msg, isStreaming: false } : msg)))
+        }
+      }, 30) // Adjust speed as needed
+
+      return () => clearInterval(streamInterval)
+    }
+  }, [messages])
+
+  // Simulate receiving a response when a new user message is added
+  useEffect(() => {
+    const lastMessage = messages[messages.length - 1]
+
+    if (lastMessage && lastMessage.sender === "user") {
+      // Wait a moment before "assistant" responds
+      const timeout = setTimeout(() => {
+        let responseContent = ""
+
+        if (lastMessage.content.toLowerCase().includes("budget")) {
+          responseContent =
+            "I can help you create a budget! First, let's analyze your income and expenses. What's your monthly income?"
+        } else if (lastMessage.content.toLowerCase().includes("invest")) {
+          responseContent =
+            "Investment is a great way to grow your wealth! Based on your risk profile, I can suggest some investment options. Would you prefer low-risk, medium-risk, or high-risk investments?"
+        } else if (lastMessage.image) {
+          responseContent =
+            "I see you've shared an image. It looks like a receipt. Would you like me to analyze your spending or add these expenses to your budget tracker?"
+        } else {
+          responseContent =
+            "Thanks for your message! I'm here to help with any financial questions you might have. Could you provide more details about what you're looking for?"
+        }
+
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: Date.now().toString(),
+            content: responseContent,
+            sender: "assistant",
+            timestamp: new Date(),
+            isStreaming: true,
+          },
+        ])
+      }, 1000)
+
+      return () => clearTimeout(timeout)
+    }
+  }, [messages])
+
   // Scroll to bottom when messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -91,6 +158,20 @@ export default function ChatPage() {
 
   const toggleMobileHistory = () => {
     setShowMobileHistory(!showMobileHistory)
+  }
+
+  // Function to handle new messages from the chat bar
+  const handleNewMessage = (content: string, image?: string) => {
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: Date.now().toString(),
+        content,
+        sender: "user",
+        timestamp: new Date(),
+        image,
+      },
+    ])
   }
 
   return (
@@ -179,8 +260,8 @@ export default function ChatPage() {
           </div>
         </div>
 
-        {/* Chat input is handled by the ChatBar component */}
-        <ChatBar onChatOpen={() => {}} />
+        {/* Keep the chat bar at the bottom */}
+        <FloatingChatBar />
       </div>
 
       {/* Desktop chat history sidebar */}

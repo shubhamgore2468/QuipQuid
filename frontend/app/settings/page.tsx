@@ -1,6 +1,24 @@
+"use client"
+
+import type React from "react"
+
+import { useState, useEffect } from "react"
 import { ThemeToggle } from "@/components/theme-toggle"
+import { useTheme } from "next-themes"
 
 export default function SettingsPage() {
+  const { theme, setTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+
+  // Wait for component to mount to avoid hydration mismatch
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  const handleThemeChange = (selectedTheme: string) => {
+    setTheme(selectedTheme)
+  }
+
   return (
     <>
       <div className="container mx-auto p-4 md:p-6">
@@ -14,13 +32,13 @@ export default function SettingsPage() {
             <div className="bg-white dark:bg-slate-800 rounded-lg shadow p-4">
               <nav className="space-y-1">
                 {[
-                  { name: "Profile", active: true },
-                  { name: "Account" },
-                  { name: "Notifications" },
-                  { name: "Appearance" },
-                  { name: "Security" },
-                  { name: "Billing" },
-                  { name: "Integrations" },
+                  { name: "Profile", active: false },
+                  { name: "Account", active: false },
+                  { name: "Notifications", active: false },
+                  { name: "Appearance", active: true },
+                  { name: "Security", active: false },
+                  { name: "Billing", active: false },
+                  { name: "Integrations", active: false },
                 ].map((item) => (
                   <a
                     key={item.name}
@@ -39,7 +57,93 @@ export default function SettingsPage() {
           </div>
 
           <div className="md:col-span-2">
+            {/* Theme Settings Card */}
             <div className="bg-white dark:bg-slate-800 rounded-lg shadow p-6">
+              <h2 className="text-xl font-semibold mb-6">Appearance</h2>
+
+              <div className="space-y-6">
+                <div>
+                  <h3 className="font-medium mb-4">Theme</h3>
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <ThemeOption
+                      title="Light"
+                      selected={mounted && theme === "light"}
+                      onClick={() => handleThemeChange("light")}
+                      preview={
+                        <div className="bg-white border border-slate-200 rounded-md p-2 h-full">
+                          <div className="h-2 w-8 bg-slate-700 rounded mb-2"></div>
+                          <div className="h-2 w-12 bg-slate-300 rounded mb-2"></div>
+                          <div className="h-2 w-10 bg-slate-300 rounded"></div>
+                        </div>
+                      }
+                    />
+
+                    <ThemeOption
+                      title="Dark"
+                      selected={mounted && theme === "dark"}
+                      onClick={() => handleThemeChange("dark")}
+                      preview={
+                        <div className="bg-slate-800 border border-slate-700 rounded-md p-2 h-full">
+                          <div className="h-2 w-8 bg-white rounded mb-2"></div>
+                          <div className="h-2 w-12 bg-slate-600 rounded mb-2"></div>
+                          <div className="h-2 w-10 bg-slate-600 rounded"></div>
+                        </div>
+                      }
+                    />
+
+                    <ThemeOption
+                      title="System"
+                      selected={mounted && theme === "system"}
+                      onClick={() => handleThemeChange("system")}
+                      preview={
+                        <div className="bg-gradient-to-r from-white to-slate-800 border border-slate-300 rounded-md p-2 h-full">
+                          <div className="h-2 w-8 bg-slate-500 rounded mb-2"></div>
+                          <div className="h-2 w-12 bg-slate-400 rounded mb-2"></div>
+                          <div className="h-2 w-10 bg-slate-400 rounded"></div>
+                        </div>
+                      }
+                    />
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between pt-4 border-t border-slate-200 dark:border-slate-700">
+                  <div>
+                    <h3 className="font-medium">Toggle Theme</h3>
+                    <p className="text-sm text-slate-500 dark:text-slate-400">
+                      Quickly switch between light and dark mode
+                    </p>
+                  </div>
+                  <ThemeToggle className="h-10 w-10" />
+                </div>
+
+                <div className="pt-4 border-t border-slate-200 dark:border-slate-700">
+                  <h3 className="font-medium mb-2">Color Accent</h3>
+                  <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">Choose your preferred accent color</p>
+
+                  <div className="flex flex-wrap gap-3">
+                    {[
+                      { name: "Purple", color: "#6C16C7", selected: true },
+                      { name: "Blue", color: "#2563EB", selected: false },
+                      { name: "Green", color: "#16A34A", selected: false },
+                      { name: "Red", color: "#DC2626", selected: false },
+                      { name: "Orange", color: "#EA580C", selected: false },
+                    ].map((color) => (
+                      <button
+                        key={color.name}
+                        className={`w-8 h-8 rounded-full relative ${color.selected ? "ring-2 ring-offset-2 ring-slate-300 dark:ring-slate-600" : ""}`}
+                        style={{ backgroundColor: color.color }}
+                        title={color.name}
+                      >
+                        <span className="sr-only">{color.name}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Profile Settings Card */}
+            <div className="bg-white dark:bg-slate-800 rounded-lg shadow p-6 mt-6">
               <h2 className="text-xl font-semibold mb-6">Profile Settings</h2>
 
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-6 pb-6 border-b">
@@ -105,22 +209,35 @@ export default function SettingsPage() {
                 </div>
               </form>
             </div>
-
-            {/* Theme Settings Card */}
-            <div className="bg-white dark:bg-slate-800 rounded-lg shadow p-6 mt-6">
-              <h2 className="text-xl font-semibold mb-6">Appearance</h2>
-
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="font-medium">Theme</h3>
-                  <p className="text-sm text-slate-500 dark:text-slate-400">Toggle between light and dark mode</p>
-                </div>
-                <ThemeToggle className="h-10 w-10" />
-              </div>
-            </div>
           </div>
         </div>
       </div>
     </>
+  )
+}
+
+interface ThemeOptionProps {
+  title: string
+  selected: boolean
+  onClick: () => void
+  preview: React.ReactNode
+}
+
+function ThemeOption({ title, selected, onClick, preview }: ThemeOptionProps) {
+  return (
+    <div
+      className={`border rounded-lg p-3 cursor-pointer transition-all ${
+        selected
+          ? "border-purple-500 bg-purple-50 dark:bg-purple-900/20"
+          : "border-slate-200 dark:border-slate-700 hover:border-purple-300 dark:hover:border-purple-700"
+      }`}
+      onClick={onClick}
+    >
+      <div className="h-24 mb-2">{preview}</div>
+      <div className="flex items-center justify-between">
+        <span className="font-medium">{title}</span>
+        {selected && <div className="w-4 h-4 rounded-full bg-purple-500"></div>}
+      </div>
+    </div>
   )
 }
