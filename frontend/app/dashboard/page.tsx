@@ -1,13 +1,13 @@
-import { ChatBar } from "@/components/chat-bar"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { DollarSign, TrendingDown, TrendingUp, ArrowUpRight, PiggyBank, CreditCard, Wallet } from "lucide-react"
+import { FloatingChatBar } from "@/components/floating-chat-bar"
 
 export default function DashboardPage() {
   return (
     <>
       <div className="container mx-auto p-4 md:p-6">
-        <div className="bg-gradient-to-r from-purple-600 to-purple-400 rounded-lg p-6 mb-6 text-white shadow-lg">
+        <div className="bg-gradient-to-r from-coastal-teal to-coastal-dark rounded-lg p-6 mb-6 text-white shadow-lg">
           <h1 className="text-3xl font-bold">Dashboard</h1>
           <p className="mt-2 opacity-90">Your complete financial overview</p>
         </div>
@@ -24,7 +24,7 @@ export default function DashboardPage() {
                   <DollarSign className="mr-2 h-4 w-4 text-muted-foreground" />
                   <span className="text-2xl font-bold">$5,240</span>
                 </div>
-                <div className="flex items-center text-emerald-500">
+                <div className="flex items-center text-coastal-teal">
                   <TrendingUp className="h-4 w-4 mr-1" />
                   <span className="text-sm">+12%</span>
                 </div>
@@ -42,7 +42,7 @@ export default function DashboardPage() {
                   <DollarSign className="mr-2 h-4 w-4 text-muted-foreground" />
                   <span className="text-2xl font-bold">$3,580</span>
                 </div>
-                <div className="flex items-center text-emerald-500">
+                <div className="flex items-center text-coastal-teal">
                   <TrendingUp className="h-4 w-4 mr-1" />
                   <span className="text-sm">+5%</span>
                 </div>
@@ -60,7 +60,7 @@ export default function DashboardPage() {
                   <DollarSign className="mr-2 h-4 w-4 text-muted-foreground" />
                   <span className="text-2xl font-bold">$1,890</span>
                 </div>
-                <div className="flex items-center text-rose-500">
+                <div className="flex items-center text-coastal-coral">
                   <TrendingDown className="h-4 w-4 mr-1" />
                   <span className="text-sm">-4%</span>
                 </div>
@@ -78,7 +78,7 @@ export default function DashboardPage() {
                   <PiggyBank className="mr-2 h-4 w-4 text-muted-foreground" />
                   <span className="text-2xl font-bold">32%</span>
                 </div>
-                <div className="flex items-center text-emerald-500">
+                <div className="flex items-center text-coastal-teal">
                   <TrendingUp className="h-4 w-4 mr-1" />
                   <span className="text-sm">+2%</span>
                 </div>
@@ -99,11 +99,11 @@ export default function DashboardPage() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  <CategoryBar label="Housing" percentage={35} color="bg-[#6C16C7]" />
-                  <CategoryBar label="Food" percentage={25} color="bg-[#9747FF]" />
-                  <CategoryBar label="Transportation" percentage={15} color="bg-[#B47EFF]" />
-                  <CategoryBar label="Entertainment" percentage={10} color="bg-[#D2B1FF]" />
-                  <CategoryBar label="Other" percentage={15} color="bg-[#E5D4FF]" />
+                  <CategoryBar label="Housing" percentage={35} color="bg-coastal-dark" />
+                  <CategoryBar label="Food" percentage={25} color="bg-coastal-teal" />
+                  <CategoryBar label="Transportation" percentage={15} color="bg-coastal-gold" />
+                  <CategoryBar label="Entertainment" percentage={10} color="bg-coastal-orange" />
+                  <CategoryBar label="Other" percentage={15} color="bg-coastal-coral" />
                 </div>
               </CardContent>
             </Card>
@@ -115,7 +115,7 @@ export default function DashboardPage() {
                   <CardTitle>Recent Transactions</CardTitle>
                   <CardDescription>Your latest financial activity</CardDescription>
                 </div>
-                <button className="text-sm text-primary font-medium flex items-center">
+                <button className="text-sm text-coastal-teal font-medium flex items-center">
                   View all
                   <ArrowUpRight className="ml-1 h-4 w-4" />
                 </button>
@@ -131,23 +131,23 @@ export default function DashboardPage() {
                   ].map((transaction, i) => (
                     <div key={i} className="flex justify-between items-center border-b pb-2 last:border-0 last:pb-0">
                       <div className="flex items-center">
-                        <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center mr-3">
+                        <div className="w-10 h-10 rounded-full bg-coastal-teal/10 dark:bg-coastal-teal/20 flex items-center justify-center mr-3">
                           {transaction.amount > 0 ? (
-                            <TrendingUp className="h-5 w-5 text-green-500" />
+                            <TrendingUp className="h-5 w-5 text-coastal-teal" />
                           ) : (
-                            <TrendingDown className="h-5 w-5 text-rose-500" />
+                            <TrendingDown className="h-5 w-5 text-coastal-coral" />
                           )}
                         </div>
                         <div>
                           <p className="font-medium">{transaction.name}</p>
-                          <p className="text-xs text-slate-500 dark:text-slate-400">{transaction.date}</p>
+                          <p className="text-xs text-coastal-dark/60 dark:text-coastal-teal/60">{transaction.date}</p>
                         </div>
                       </div>
                       <div className="text-right">
-                        <p className={transaction.amount > 0 ? "text-green-600" : "text-red-600"}>
+                        <p className={transaction.amount > 0 ? "text-coastal-teal" : "text-coastal-coral"}>
                           ${Math.abs(transaction.amount).toFixed(2)}
                         </p>
-                        <span className="text-xs px-2 py-1 rounded-full bg-slate-100 dark:bg-slate-700">
+                        <span className="text-xs px-2 py-1 rounded-full bg-coastal-dark/10 dark:bg-coastal-teal/10">
                           {transaction.category}
                         </span>
                       </div>
@@ -174,12 +174,12 @@ export default function DashboardPage() {
                 ].map((account, i) => (
                   <div key={i} className="flex items-center justify-between p-3 rounded-lg border">
                     <div className="flex items-center">
-                      <div className="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mr-3 text-[#6C16C7]">
+                      <div className="w-10 h-10 rounded-full bg-coastal-teal/10 dark:bg-coastal-teal/20 flex items-center justify-center mr-3 text-coastal-teal">
                         {account.icon}
                       </div>
                       <span className="font-medium">{account.name}</span>
                     </div>
-                    <span className={account.balance < 0 ? "text-red-600" : ""}>
+                    <span className={account.balance < 0 ? "text-coastal-coral" : ""}>
                       ${Math.abs(account.balance).toFixed(2)}
                     </span>
                   </div>
@@ -202,11 +202,11 @@ export default function DashboardPage() {
                   <div key={i} className="flex justify-between items-center border-b pb-2 last:border-0">
                     <div>
                       <p className="font-medium">{bill.name}</p>
-                      <p className="text-xs text-slate-500 dark:text-slate-400">Due: {bill.date}</p>
+                      <p className="text-xs text-coastal-dark/60 dark:text-coastal-teal/60">Due: {bill.date}</p>
                     </div>
                     <div className="text-right">
                       <p>${bill.amount.toFixed(2)}</p>
-                      <span className="text-xs px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full">
+                      <span className="text-xs px-2 py-1 bg-coastal-gold/20 text-coastal-gold/80 rounded-full">
                         {bill.status}
                       </span>
                     </div>
@@ -227,15 +227,17 @@ export default function DashboardPage() {
                     <span className="text-sm font-medium">Spent</span>
                     <span className="text-sm font-medium">$1,890 / $3,000</span>
                   </div>
-                  <Progress value={63} className="h-2" />
-                  <p className="text-xs text-slate-500 dark:text-slate-400">You've spent 63% of your monthly budget</p>
+                  <Progress value={63} className="h-2 bg-coastal-teal/20" indicatorClassName="bg-coastal-teal" />
+                  <p className="text-xs text-coastal-dark/60 dark:text-coastal-teal/60">
+                    You've spent 63% of your monthly budget
+                  </p>
                 </div>
               </CardContent>
             </Card>
           </div>
         </div>
       </div>
-      <ChatBar />
+      <FloatingChatBar />
     </>
   )
 }
@@ -253,7 +255,7 @@ function CategoryBar({ label, percentage, color }: CategoryBarProps) {
         <span>{label}</span>
         <span className="font-medium">{percentage}%</span>
       </div>
-      <div className="h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+      <div className="h-2 bg-coastal-dark/10 dark:bg-coastal-teal/10 rounded-full overflow-hidden">
         <div className={`h-full ${color} rounded-full`} style={{ width: `${percentage}%` }} />
       </div>
     </div>

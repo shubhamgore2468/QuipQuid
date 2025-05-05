@@ -17,7 +17,7 @@ export function MobileNavbar() {
   ]
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 shadow-lg z-40">
+    <nav className="fixed bottom-0 left-0 right-0 bg-white dark:bg-theme-navy border-t border-theme-navy/10 dark:border-white/10 shadow-lg z-40">
       <div className="flex justify-around items-center h-16">
         {navItems.map((item) => {
           const isActive = pathname === item.href
@@ -27,7 +27,7 @@ export function MobileNavbar() {
               href={item.href}
               className={cn(
                 "flex flex-col items-center justify-center w-full h-full",
-                isActive ? "text-[#6C16C7]" : "text-slate-500 dark:text-slate-400",
+                isActive ? "text-theme-orange" : "text-theme-navy/60 dark:text-white/60",
               )}
             >
               <item.icon size={20} />

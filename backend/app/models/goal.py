@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Float, DateTime, Date, Enum, ForeignKey
 from sqlalchemy.sql import func
-from db.postgresql import Base
+from app.db.postgresql import Base
 
 class Goal(Base):
     __tablename__ = 'goals'

@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { PlusCircle, X } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { FloatingChatBar } from "@/components/floating-chat-bar"
 
 // Mock food items data
 const initialFoodItems = [
@@ -15,13 +16,13 @@ const initialFoodItems = [
   { id: 7, name: "Soft Drinks", price: 2.5, users: [] },
 ]
 
-// Mock users data
+// Mock users data with new color palette
 const availableUsers = [
-  { id: 1, name: "John Doe", initials: "JD", color: "#6C16C7" },
-  { id: 2, name: "Alice Smith", initials: "AS", color: "#E5446D" },
-  { id: 3, name: "Bob Johnson", initials: "BJ", color: "#2563EB" },
-  { id: 4, name: "Emma Wilson", initials: "EW", color: "#16A34A" },
-  { id: 5, name: "Mike Brown", initials: "MB", color: "#CA8A04" },
+  { id: 1, name: "John Doe", initials: "JD", color: "#264653" },
+  { id: 2, name: "Alice Smith", initials: "AS", color: "#2A9D8F" },
+  { id: 3, name: "Bob Johnson", initials: "BJ", color: "#E9C46A" },
+  { id: 4, name: "Emma Wilson", initials: "EW", color: "#F4A261" },
+  { id: 5, name: "Mike Brown", initials: "MB", color: "#E76F51" },
 ]
 
 interface FoodItem {
@@ -77,9 +78,25 @@ export default function SplitPage() {
     return item.price / item.users.length
   }
 
+  // Calculate total bill amount
+  const getTotalBillAmount = () => {
+    return foodItems.reduce((total, item) => total + item.price, 0)
+  }
+
+  // Calculate total per user
+  const getTotalPerUser = (userId: number) => {
+    let total = 0
+    foodItems.forEach((item) => {
+      if (item.users.some((user) => user.id === userId)) {
+        total += getPerPersonCost(item)
+      }
+    })
+    return total
+  }
+
   return (
     <div className="container mx-auto p-4 md:p-6">
-      <div className="bg-gradient-to-r from-purple-600 to-purple-400 rounded-lg p-6 mb-6 text-white shadow-lg">
+      <div className="bg-gradient-to-r from-coastal-dark to-coastal-teal rounded-lg p-6 mb-6 text-white shadow-lg">
         <h1 className="text-3xl font-bold">Split the Bill</h1>
         <p className="mt-2 opacity-90">Divide food expenses among friends</p>
       </div>
@@ -96,7 +113,7 @@ export default function SplitPage() {
                 <div className="flex justify-between items-center">
                   <div>
                     <h3 className="font-medium">{item.name}</h3>
-                    <p className="text-sm text-slate-500 dark:text-slate-400">${item.price.toFixed(2)}</p>
+                    <p className="text-sm text-coastal-dark/60 dark:text-coastal-teal/60">${item.price.toFixed(2)}</p>
                   </div>
 
                   <div className="flex items-center gap-2">
@@ -106,17 +123,17 @@ export default function SplitPage() {
                         {item.users.map((user, index) => (
                           <div
                             key={user.id}
-                            className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-medium border-2 border-white dark:border-slate-800 relative group"
+                            className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-medium border-2 border-white dark:border-coastal-dark relative group"
                             style={{ backgroundColor: user.color, zIndex: item.users.length - index }}
                           >
                             {user.initials}
                             <button
                               onClick={() => handleRemoveUser(item.id, user.id)}
-                              className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                              className="absolute -top-1 -right-1 bg-coastal-coral text-white rounded-full w-4 h-4 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
                             >
                               <X size={10} />
                             </button>
-                            <span className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                            <span className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 bg-coastal-dark text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                               {user.name}
                               {item.users.length > 1 && (
                                 <span className="block text-xs opacity-75">
@@ -132,7 +149,7 @@ export default function SplitPage() {
                     {/* Add user button */}
                     <button
                       onClick={() => toggleUserSelector(item.id)}
-                      className="p-2 rounded-full bg-purple-100 dark:bg-purple-900/30 text-[#6C16C7] hover:bg-purple-200 dark:hover:bg-purple-800/30"
+                      className="p-2 rounded-full bg-coastal-teal/10 dark:bg-coastal-teal/20 text-coastal-teal hover:bg-coastal-teal/20 dark:hover:bg-coastal-teal/30"
                     >
                       <PlusCircle size={20} />
                     </button>
@@ -141,7 +158,7 @@ export default function SplitPage() {
 
                 {/* User selector dropdown */}
                 {showUserSelector === item.id && (
-                  <div className="mt-3 p-3 bg-white dark:bg-slate-700 rounded-md shadow-md border border-slate-200 dark:border-slate-600">
+                  <div className="mt-3 p-3 bg-white dark:bg-coastal-dark rounded-md shadow-md border border-coastal-teal/20 dark:border-coastal-teal/30">
                     <h4 className="font-medium text-sm mb-2">Add people to split with:</h4>
                     <div className="flex flex-wrap gap-2">
                       {availableUsers.map((user) => {
@@ -153,8 +170,8 @@ export default function SplitPage() {
                             disabled={isAdded}
                             className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm ${
                               isAdded
-                                ? "bg-slate-100 text-slate-400 dark:bg-slate-600 dark:text-slate-400 cursor-not-allowed"
-                                : "bg-purple-50 text-[#6C16C7] hover:bg-purple-100 dark:bg-purple-900/20 dark:hover:bg-purple-900/30"
+                                ? "bg-coastal-dark/10 text-coastal-dark/40 dark:bg-coastal-teal/10 dark:text-coastal-teal/40 cursor-not-allowed"
+                                : "bg-coastal-teal/10 text-coastal-teal hover:bg-coastal-teal/20 dark:bg-coastal-teal/20 dark:hover:bg-coastal-teal/30"
                             }`}
                           >
                             <div
@@ -175,17 +192,12 @@ export default function SplitPage() {
           </div>
 
           {/* Summary */}
-          <div className="mt-6 p-4 bg-purple-50 dark:bg-purple-900/10 rounded-lg">
+          <div className="mt-6 p-4 bg-coastal-teal/10 dark:bg-coastal-teal/20 rounded-lg">
             <h3 className="font-medium mb-2">Summary</h3>
             <div className="space-y-2">
               {availableUsers.map((user) => {
                 // Calculate total for this user
-                let userTotal = 0
-                foodItems.forEach((item) => {
-                  if (item.users.some((u) => u.id === user.id)) {
-                    userTotal += getPerPersonCost(item)
-                  }
-                })
+                const userTotal = getTotalPerUser(user.id)
 
                 if (userTotal > 0) {
                   return (
@@ -205,10 +217,19 @@ export default function SplitPage() {
                 }
                 return null
               })}
+
+              {/* Total bill amount */}
+              <div className="pt-3 mt-3 border-t border-coastal-teal/20 dark:border-coastal-teal/30">
+                <div className="flex justify-between items-center">
+                  <span className="font-semibold">Total Bill</span>
+                  <span className="font-bold text-lg">${getTotalBillAmount().toFixed(2)}</span>
+                </div>
+              </div>
             </div>
           </div>
         </CardContent>
       </Card>
+      <FloatingChatBar />
     </div>
   )
 }

@@ -1,24 +1,26 @@
-import { ChatBar } from "@/components/chat-bar"
+import { Card } from "@/components/ui/card"
+import { Search } from "lucide-react"
+import { FloatingChatBar } from "@/components/floating-chat-bar"
 
 export default function HistoryPage() {
   return (
     <>
       <div className="container mx-auto p-4 md:p-6">
-        <div className="bg-gradient-to-r from-purple-600 to-purple-400 rounded-lg p-6 mb-6 text-white shadow-lg">
+        <div className="bg-gradient-to-r from-coastal-dark to-coastal-teal rounded-lg p-6 mb-6 text-white shadow-lg">
           <h1 className="text-3xl font-bold">Transaction History</h1>
           <p className="mt-2 opacity-90">View and manage your financial transactions</p>
         </div>
 
-        <div className="bg-white dark:bg-slate-800 rounded-lg shadow overflow-hidden">
-          <div className="p-4 border-b border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row justify-between gap-4">
+        <Card className="overflow-hidden">
+          <div className="p-4 border-b border-coastal-dark/10 dark:border-coastal-teal/10 flex flex-col sm:flex-row justify-between gap-4">
             <div className="flex gap-2">
-              <select className="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500">
+              <select className="p-2 px-4 bg-coastal-dark/5 dark:bg-coastal-teal/10 border-coastal-dark/10 dark:border-coastal-teal/20 text-coastal-dark dark:text-coastal-teal rounded-full focus:outline-none focus:ring-2 focus:ring-coastal-teal">
                 <option>All Categories</option>
                 <option>Income</option>
                 <option>Expenses</option>
                 <option>Transfers</option>
               </select>
-              <select className="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500">
+              <select className="p-2 px-4 bg-coastal-dark/5 dark:bg-coastal-teal/10 border-coastal-dark/10 dark:border-coastal-teal/20 text-coastal-dark dark:text-coastal-teal rounded-full focus:outline-none focus:ring-2 focus:ring-coastal-teal">
                 <option>Last 30 Days</option>
                 <option>This Month</option>
                 <option>Last Month</option>
@@ -29,33 +31,20 @@ export default function HistoryPage() {
               <input
                 type="text"
                 placeholder="Search transactions..."
-                className="w-full p-2 pl-8 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full p-2 pl-10 pr-4 bg-coastal-dark/5 dark:bg-coastal-teal/10 border-coastal-dark/10 dark:border-coastal-teal/20 text-coastal-dark dark:text-coastal-teal rounded-full focus:outline-none focus:ring-2 focus:ring-coastal-teal"
               />
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-4 w-4 absolute left-2.5 top-3 text-slate-400"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
+              <Search className="h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-coastal-dark/60 dark:text-coastal-teal/60" />
             </div>
           </div>
 
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-slate-50 dark:bg-slate-700">
+              <thead className="bg-coastal-dark/5 dark:bg-coastal-teal/10">
                 <tr>
-                  <th className="text-left p-4">Date</th>
-                  <th className="text-left p-4">Description</th>
-                  <th className="text-left p-4">Category</th>
-                  <th className="text-right p-4">Amount</th>
+                  <th className="text-left p-4 text-coastal-dark dark:text-coastal-teal">Date</th>
+                  <th className="text-left p-4 text-coastal-dark dark:text-coastal-teal">Description</th>
+                  <th className="text-left p-4 text-coastal-dark dark:text-coastal-teal">Category</th>
+                  <th className="text-right p-4 text-coastal-dark dark:text-coastal-teal">Amount</th>
                 </tr>
               </thead>
               <tbody>
@@ -71,22 +60,24 @@ export default function HistoryPage() {
                 ].map((transaction, i) => (
                   <tr
                     key={i}
-                    className="border-b border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50"
+                    className="border-b border-coastal-dark/10 dark:border-coastal-teal/10 hover:bg-coastal-dark/5 dark:hover:bg-coastal-teal/5"
                   >
                     <td className="p-4">{transaction.date}</td>
                     <td className="p-4">{transaction.description}</td>
                     <td className="p-4">
                       <span
-                        className={`px-2 py-1 rounded-full text-xs ${
+                        className={`px-3 py-1 rounded-full text-xs ${
                           transaction.category === "Income"
-                            ? "bg-green-100 text-green-800"
-                            : "bg-blue-100 text-blue-800"
+                            ? "bg-coastal-teal/10 text-coastal-teal dark:bg-coastal-teal/20 dark:text-coastal-teal"
+                            : "bg-coastal-orange/10 text-coastal-dark dark:bg-coastal-orange/20 dark:text-coastal-orange"
                         }`}
                       >
                         {transaction.category}
                       </span>
                     </td>
-                    <td className={`p-4 text-right ${transaction.amount > 0 ? "text-green-600" : "text-red-600"}`}>
+                    <td
+                      className={`p-4 text-right ${transaction.amount > 0 ? "text-coastal-teal" : "text-coastal-coral"}`}
+                    >
                       ${Math.abs(transaction.amount).toFixed(2)}
                     </td>
                   </tr>
@@ -95,21 +86,27 @@ export default function HistoryPage() {
             </table>
           </div>
 
-          <div className="p-4 border-t border-slate-200 dark:border-slate-700 flex justify-between items-center">
-            <span className="text-sm text-slate-500">Showing 8 of 24 transactions</span>
+          <div className="p-4 border-t border-coastal-dark/10 dark:border-coastal-teal/10 flex justify-between items-center">
+            <span className="text-sm text-coastal-dark/60 dark:text-coastal-teal/60">Showing 8 of 24 transactions</span>
             <div className="flex gap-2">
-              <button className="px-3 py-1 border rounded-md hover:bg-slate-50 dark:hover:bg-slate-700">
+              <button className="px-3 py-1 rounded-full border border-coastal-dark/10 dark:border-coastal-teal/20 hover:bg-coastal-dark/5 dark:hover:bg-coastal-teal/10">
                 Previous
               </button>
-              <button className="px-3 py-1 border rounded-md bg-[#6C16C7] text-white">1</button>
-              <button className="px-3 py-1 border rounded-md hover:bg-slate-50 dark:hover:bg-slate-700">2</button>
-              <button className="px-3 py-1 border rounded-md hover:bg-slate-50 dark:hover:bg-slate-700">3</button>
-              <button className="px-3 py-1 border rounded-md hover:bg-slate-50 dark:hover:bg-slate-700">Next</button>
+              <button className="px-3 py-1 rounded-full bg-coastal-teal text-white">1</button>
+              <button className="px-3 py-1 rounded-full border border-coastal-dark/10 dark:border-coastal-teal/20 hover:bg-coastal-dark/5 dark:hover:bg-coastal-teal/10">
+                2
+              </button>
+              <button className="px-3 py-1 rounded-full border border-coastal-dark/10 dark:border-coastal-teal/20 hover:bg-coastal-dark/5 dark:hover:bg-coastal-teal/10">
+                3
+              </button>
+              <button className="px-3 py-1 rounded-full border border-coastal-dark/10 dark:border-coastal-teal/20 hover:bg-coastal-dark/5 dark:hover:bg-coastal-teal/10">
+                Next
+              </button>
             </div>
           </div>
-        </div>
+        </Card>
       </div>
-      <ChatBar />
+      <FloatingChatBar />
     </>
   )
 }
