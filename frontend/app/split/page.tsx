@@ -77,6 +77,22 @@ export default function SplitPage() {
     return item.price / item.users.length
   }
 
+  // Calculate total bill amount
+  const getTotalBillAmount = () => {
+    return foodItems.reduce((total, item) => total + item.price, 0)
+  }
+
+  // Calculate total per user
+  const getTotalPerUser = (userId: number) => {
+    let total = 0
+    foodItems.forEach((item) => {
+      if (item.users.some((user) => user.id === userId)) {
+        total += getPerPersonCost(item)
+      }
+    })
+    return total
+  }
+
   return (
     <div className="container mx-auto p-4 md:p-6">
       <div className="bg-gradient-to-r from-purple-600 to-purple-400 rounded-lg p-6 mb-6 text-white shadow-lg">
@@ -180,12 +196,7 @@ export default function SplitPage() {
             <div className="space-y-2">
               {availableUsers.map((user) => {
                 // Calculate total for this user
-                let userTotal = 0
-                foodItems.forEach((item) => {
-                  if (item.users.some((u) => u.id === user.id)) {
-                    userTotal += getPerPersonCost(item)
-                  }
-                })
+                const userTotal = getTotalPerUser(user.id)
 
                 if (userTotal > 0) {
                   return (
@@ -205,6 +216,14 @@ export default function SplitPage() {
                 }
                 return null
               })}
+
+              {/* Total bill amount */}
+              <div className="pt-3 mt-3 border-t border-purple-200 dark:border-purple-800">
+                <div className="flex justify-between items-center">
+                  <span className="font-semibold">Total Bill</span>
+                  <span className="font-bold text-lg">${getTotalBillAmount().toFixed(2)}</span>
+                </div>
+              </div>
             </div>
           </div>
         </CardContent>

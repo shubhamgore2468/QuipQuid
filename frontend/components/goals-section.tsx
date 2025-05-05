@@ -37,7 +37,7 @@ export function GoalsSection() {
 
           <div className="flex items-center space-x-2 overflow-x-auto py-2 scrollbar-hide">
             <RewardBadge title="Budget Master" icon={<Award />} />
-            <RewardBadge title="Saver Pro" icon={<Trophy />} />
+            <RewardBadge title="Saving Champion" icon={<Trophy />} />
             <RewardBadge title="Goal Crusher" icon={<Target />} />
             <RewardBadge title="2 Week Streak" icon={<Flame />} />
           </div>

@@ -75,8 +75,8 @@ export function FloatingChatBar() {
   }
 
   return (
-    <div className="fixed bottom-20 md:bottom-6 right-6 z-50">
-      <div className="bg-gradient-to-r from-purple-600/90 to-purple-500/90 backdrop-blur-sm rounded-full shadow-lg">
+    <div className="fixed bottom-20 md:bottom-6 left-0 right-0 z-50 px-4 md:px-6">
+      <div className="bg-gradient-to-r from-purple-600/90 to-purple-500/90 backdrop-blur-sm rounded-full shadow-lg max-w-3xl mx-auto">
         <form onSubmit={handleSubmit} className="flex items-center p-1">
           <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={handleImageSelect} />
 
@@ -89,14 +89,14 @@ export function FloatingChatBar() {
             <span className="sr-only">Upload image</span>
           </button>
 
-          <div className="relative">
+          <div className="relative flex-1">
             <input
               type="text"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               onFocus={handleInputFocus}
               placeholder="Ask about your finances..."
-              className="w-48 sm:w-64 py-2 px-4 bg-white/20 text-white placeholder-white/70 rounded-full focus:outline-none focus:ring-2 focus:ring-white/50"
+              className="w-full py-2 px-4 bg-white/20 text-white placeholder-white/70 rounded-full focus:outline-none focus:ring-2 focus:ring-white/50"
             />
             <button
               type="button"
