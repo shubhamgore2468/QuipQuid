@@ -1,10 +1,7 @@
-import sys
-sys.path.append("..")
-
 from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey, Enum
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
-from db.postgresql import Base
+from app.db.postgresql import Base
 import enum
 
 class ExpenseType(str, enum.Enum):
@@ -14,7 +11,6 @@ class ExpenseType(str, enum.Enum):
     PLAID = "plaid"
 
 class ExpenseCategory(str, enum.Enum):
-    ''' can be added moerw acc. to the user preferences'''
     FOOD = "food"
     TRANSPORTATION = "transportation"
     HOUSING = "housing"
@@ -30,6 +26,7 @@ class ExpenseCategory(str, enum.Enum):
 
 class Expense(Base):
     __tablename__ = 'expenses'
+    
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     amount = Column(Float, nullable=False)
