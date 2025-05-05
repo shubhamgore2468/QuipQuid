@@ -151,8 +151,9 @@ class BudgetPlanner:
             - goals (id, name, target_amount, current_amount, deadline, created_at)
             
             User request: {prompt}
-            
-            Return only the SQL query, nothing else.
+            use user_id = 1
+                
+            Return only the SQL query, nothing else. The ouput SQL query qould be directly executed in the database.
             """
         else:  # POST
             if state.what_type == WhatType.READJUST_BUDGET:
@@ -166,8 +167,9 @@ class BudgetPlanner:
                 - goals (id, name, target_amount, current_amount, deadline, created_at)
                 
                 User request: {prompt}
+                use user_id = 1
                 
-                Return only the SQL query, nothing else.
+                Return only the SQL query, nothing else. The ouput SQL query qould be directly executed in the database.
                 """
             elif state.what_type == WhatType.NEW_EXPENSE:
                 budget_logger.debug("Using NEW_EXPENSE query template")
@@ -185,8 +187,9 @@ class BudgetPlanner:
                 The input_type should be one of: text, audio, image, plaid.
                 
                 User request: {prompt}
+                use user_id = 1
                 
-                Return only the SQL query, nothing else.
+                Return only the SQL query, nothing else. The ouput SQL query qould be directly executed in the database.
                 """
             else:  # CREATE_GOALS
                 budget_logger.debug("Using CREATE_GOALS query template")
@@ -199,8 +202,9 @@ class BudgetPlanner:
                 - goals (id, name, target_amount, current_amount, deadline, created_at)
                 
                 User request: {prompt}
+                use user_id = 1
                 
-                Return only the SQL query, nothing else.
+                Return only the SQL query, nothing else. The ouput SQL query qould be directly executed in the database.
                 """
         
         prompt = ChatPromptTemplate.from_template(template)
