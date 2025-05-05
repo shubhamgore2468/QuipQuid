@@ -2,10 +2,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.api.billSplit import router as split_bill_router
-
+from app.api.budget import router as budget_router
+from app.api.goals import router as goals_router
 # Import all models before creating the app to ensure they're registered with SQLAlchemy
 from app.db.postgresql import Base, engine
-from app.models import User, Expense, Transaction
+from app.models import User, Expense, Transaction, Budget, Goal
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -24,6 +25,8 @@ app.add_middleware(
 
 # Include routers
 app.include_router(split_bill_router, prefix=settings.API_STR + "/split-bill", tags=["Bill Split"])
+app.include_router(goals_router, prefix=settings.API_STR + "/goals", tags=["Goals"])
+app.include_router(budget_router, prefix=settings.API_STR + "/budget", tags=["budget"])
 
 @app.on_event("startup")
 async def startup_event():
@@ -32,6 +35,8 @@ async def startup_event():
         # Create all tables if they don't exist
         Base.metadata.create_all(bind=engine)
         print("Database tables initialized successfully")
+        for table in Base.metadata.tables:
+            print(f"  - {table}")
     except Exception as e:
         print(f"Error initializing database: {e}")
         raise

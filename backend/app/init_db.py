@@ -12,6 +12,8 @@ from app.db.postgresql import Base, engine
 from app.models.user import User
 from app.models.expense import Expense
 from app.models.transactions import Transaction
+from app.models.budget import Budget
+from app.models.goal import Goal
 
 def init_db():
     """Initialize the database by creating all tables."""

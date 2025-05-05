@@ -22,7 +22,7 @@ export function Sidebar() {
 
       {/* Mobile toggle button */}
       <button
-        className="fixed top-4 left-4 z-50 rounded-md p-2 bg-[#6C16C7] text-white md:hidden"
+        className="fixed top-4 left-4 z-50 rounded-md p-2 bg-theme-orange text-white md:hidden"
         onClick={toggleSidebar}
       >
         {isOpen ? <X size={20} /> : <Menu size={20} />}
@@ -31,15 +31,15 @@ export function Sidebar() {
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-40 w-64 bg-gradient-to-b from-[#6C16C7] to-[#5A12A7] text-white shadow-lg transform transition-transform duration-200 ease-in-out md:translate-x-0 md:static md:h-screen",
+          "fixed inset-y-0 left-0 z-40 w-64 bg-gradient-to-b from-theme-navy to-theme-navyDark text-white shadow-lg transform transition-transform duration-200 ease-in-out md:translate-x-0 md:static md:h-screen",
           isOpen ? "translate-x-0" : "-translate-x-full",
         )}
       >
         <div className="flex flex-col h-full">
           {/* Logo */}
           <div className="flex items-center gap-2 p-6 border-b border-white/10">
-            <div className="h-10 w-10 rounded-md bg-white/10 backdrop-blur-sm flex items-center justify-center">
-              <PieChart size={24} className="text-white" />
+            <div className="h-10 w-10 rounded-md bg-theme-orange/20 backdrop-blur-sm flex items-center justify-center">
+              <PieChart size={24} className="text-theme-orange" />
             </div>
             <span className="text-xl font-bold text-white">QuipQuid</span>
           </div>
@@ -91,7 +91,7 @@ function NavItem({ href, icon, children, active }: NavItemProps) {
       href={href}
       className={cn(
         "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors",
-        active ? "bg-white/20 text-white" : "text-white/80 hover:text-white hover:bg-white/10",
+        active ? "bg-theme-orange text-white" : "text-white/80 hover:text-white hover:bg-white/10",
       )}
     >
       {icon}

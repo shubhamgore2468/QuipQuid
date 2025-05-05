@@ -75,8 +75,8 @@ export function FloatingChatBar() {
   }
 
   return (
-    <div className="fixed bottom-20 md:bottom-6 right-6 z-50">
-      <div className="bg-gradient-to-r from-purple-600/90 to-purple-500/90 backdrop-blur-sm rounded-full shadow-lg">
+    <div className="fixed bottom-20 md:bottom-6 left-0 right-0 z-50 px-4 md:px-6">
+      <div className="bg-gradient-to-r from-theme-navy to-theme-navyLight backdrop-blur-sm rounded-full shadow-lg max-w-3xl mx-auto">
         <form onSubmit={handleSubmit} className="flex items-center p-1">
           <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={handleImageSelect} />
 
@@ -89,14 +89,14 @@ export function FloatingChatBar() {
             <span className="sr-only">Upload image</span>
           </button>
 
-          <div className="relative">
+          <div className="relative flex-1">
             <input
               type="text"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               onFocus={handleInputFocus}
               placeholder="Ask about your finances..."
-              className="w-48 sm:w-64 py-2 px-4 bg-white/20 text-white placeholder-white/70 rounded-full focus:outline-none focus:ring-2 focus:ring-white/50"
+              className="w-full py-2 px-4 bg-white/20 text-white placeholder-white/70 rounded-full focus:outline-none focus:ring-2 focus:ring-white/50"
             />
             <button
               type="button"
@@ -111,7 +111,7 @@ export function FloatingChatBar() {
             type="button"
             onClick={handleVoiceInput}
             className={`p-2 rounded-full ${
-              isRecording ? "bg-red-500 text-white" : "text-white/80 hover:text-white hover:bg-white/10"
+              isRecording ? "bg-theme-orange text-white" : "text-white/80 hover:text-white hover:bg-white/10"
             }`}
           >
             <Mic size={20} />
@@ -120,7 +120,7 @@ export function FloatingChatBar() {
 
           <button
             type="submit"
-            className="p-2 rounded-full bg-white text-[#6C16C7] hover:bg-white/90"
+            className="p-2 rounded-full bg-theme-orange text-white hover:bg-theme-orangeDark"
             disabled={!message.trim() && !selectedImage}
           >
             <Send size={20} />
@@ -129,7 +129,7 @@ export function FloatingChatBar() {
         </form>
 
         {imagePreview && (
-          <div className="absolute bottom-16 right-0 p-2 bg-white dark:bg-slate-800 rounded-lg shadow-lg">
+          <div className="absolute bottom-16 right-0 p-2 bg-white dark:bg-theme-navy rounded-lg shadow-lg">
             <div className="relative">
               <img
                 src={imagePreview || "/placeholder.svg"}
@@ -139,7 +139,7 @@ export function FloatingChatBar() {
               <button
                 type="button"
                 onClick={clearImage}
-                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1"
+                className="absolute -top-2 -right-2 bg-theme-orange text-white rounded-full p-1"
               >
                 <X size={16} />
               </button>

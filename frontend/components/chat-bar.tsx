@@ -83,7 +83,7 @@ export function ChatBar({ onChatOpen }: ChatBarProps) {
   }
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-gradient-to-r from-purple-600/90 to-purple-500/90 backdrop-blur-sm border-t border-purple-400/30 z-30 ml-0 lg:ml-64">
+    <div className="fixed bottom-0 left-0 right-0 bg-gradient-to-r from-theme-navy/90 to-theme-navy/80 backdrop-blur-sm border-t border-theme-navy/30 z-30 ml-0 lg:ml-64">
       <form onSubmit={handleSubmit} className="container mx-auto p-3 flex flex-col">
         {imagePreview && (
           <div className="mb-2 relative inline-block">
@@ -91,7 +91,7 @@ export function ChatBar({ onChatOpen }: ChatBarProps) {
             <button
               type="button"
               onClick={clearImage}
-              className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1"
+              className="absolute -top-2 -right-2 bg-theme-orange text-white rounded-full p-1"
             >
               <X size={16} />
             </button>
@@ -131,7 +131,7 @@ export function ChatBar({ onChatOpen }: ChatBarProps) {
           <button
             type="button"
             onClick={handleVoiceInput}
-            className={`p-2 rounded-full ${isRecording ? "bg-red-500 text-white" : "text-white/80 hover:text-white hover:bg-white/10"}`}
+            className={`p-2 rounded-full ${isRecording ? "bg-theme-orange text-white" : "text-white/80 hover:text-white hover:bg-white/10"}`}
           >
             <Mic size={20} />
             <span className="sr-only">Voice input</span>
@@ -139,7 +139,7 @@ export function ChatBar({ onChatOpen }: ChatBarProps) {
 
           <button
             type="submit"
-            className="p-2 rounded-full bg-white text-[#6C16C7] hover:bg-white/90"
+            className="p-2 rounded-full bg-theme-orange text-white hover:bg-theme-orangeDark"
             disabled={!message.trim() && !selectedImage}
           >
             <Send size={20} />
