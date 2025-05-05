@@ -17,6 +17,7 @@ class BudgetCreate(BudgetBase):
 
 class Budget(BudgetBase):
     id: int
+    user_id: int
     created_at: datetime
     
     class Config:
