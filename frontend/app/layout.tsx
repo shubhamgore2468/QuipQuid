@@ -24,16 +24,16 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <ThemeProvider>
-          <div className="flex h-screen bg-gradient-to-br from-white to-purple-50 dark:from-slate-900 dark:to-purple-900/20">
+          <div className="flex h-screen bg-gradient-to-br from-white to-theme-navy/5 dark:from-theme-navy dark:to-theme-navy/80">
             {/* Desktop Sidebar - hidden on mobile */}
             <div className="hidden md:block">
               <Sidebar />
             </div>
 
             <div className="flex-1 flex flex-col overflow-hidden">
-              <header className="bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm border-b border-slate-200 dark:border-slate-700 p-4 flex items-center">
+              <header className="bg-white/50 dark:bg-theme-navy/50 backdrop-blur-sm border-b border-theme-navy/10 dark:border-white/10 p-4 flex items-center">
                 {/* App name centered in the header */}
-                <h1 className="text-xl font-bold text-[#6C16C7] absolute left-1/2 transform -translate-x-1/2">
+                <h1 className="text-xl font-bold text-theme-orange absolute left-1/2 transform -translate-x-1/2">
                   QuipQuid
                 </h1>
 
