@@ -1,8 +1,9 @@
 import os
 from enum import Enum
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 from datetime import datetime
-from fastapi import FastAPI, File, UploadFile, HTTPException, Depends
+from fastapi import FastAPI, File, UploadFile, HTTPException, Depends, Body
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import uvicorn
 from dotenv import load_dotenv
@@ -15,6 +16,7 @@ from logger import (
     log_processing_error
 )
 from receipt_processor import ReceiptProcessor
+from budget_planner import BudgetPlanner
 
 # Load environment variables
 load_dotenv()
@@ -23,6 +25,9 @@ load_dotenv()
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
 if not ANTHROPIC_API_KEY:
     raise ValueError("ANTHROPIC_API_KEY environment variable is not set")
+
+# Get PostgreSQL connection string (optional)
+POSTGRES_CONNECTION = os.getenv("POSTGRESQL_URL")
 
 # Define expense categories
 class ExpenseCategory(str, Enum):
@@ -50,13 +55,69 @@ class ReceiptResponse(BaseModel):
     category: ExpenseCategory
     description: str
 
-# Initialize FastAPI app
-app = FastAPI(title="Receipt Processor API")
+# Budget chat request model
+class BudgetChatRequest(BaseModel):
+    message: str
 
-# Dependency to get receipt processor instance
+# Budget chat response model
+class BudgetChatResponse(BaseModel):
+    response: str
+
+# Initialize FastAPI app
+app = FastAPI(title="QuipQuid: Budget Planner")
+
+# Configure CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # For development, you might want to restrict this in production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Dependencies to get processor instances
 def get_receipt_processor():
     """Dependency that provides the ReceiptProcessor instance"""
     return ReceiptProcessor(api_key=ANTHROPIC_API_KEY)
+
+def get_budget_planner():
+    """Dependency that provides the BudgetPlanner instance"""
+    return BudgetPlanner(
+        api_key=ANTHROPIC_API_KEY,
+        postgres_connection=POSTGRES_CONNECTION
+    )
+
+
+# Endpoint for budget chat
+@app.post("/budget-chat", response_model=BudgetChatResponse)
+async def budget_chat(
+    request: BudgetChatRequest,
+    planner: BudgetPlanner = Depends(get_budget_planner)
+):
+    """
+    Process a budget-related chat message and generate a response
+    
+    Args:
+        request: Chat message from the user
+        planner: BudgetPlanner instance (injected by FastAPI)
+        
+    Returns:
+        Response to the user's budget query
+    """
+    try:
+        logger.info(f"Received budget chat: {request.message}")
+        
+        # Process the message
+        response = planner.process_query(request.message)
+        
+        # Log successful processing
+        logger.info("Budget chat processed successfully")
+        
+        # Return the response
+        return BudgetChatResponse(response=response)
+    except Exception as e:
+        log_processing_error(str(e))
+        raise HTTPException(status_code=500, detail=f"Error processing budget chat: {str(e)}")
 
 # Endpoint to process receipt image
 @app.post("/process-receipt", response_model=ReceiptResponse)
@@ -119,10 +180,22 @@ async def process_receipt_endpoint(
 async def index():
     """Root endpoint that returns API information"""
     return {
-        "name": "Receipt Processor API",
+        "name": "QuipQuid: Budget Planner",
         "version": "1.0.0",
         "documentation": "/docs",
-        "health": "ok"
+        "health": "ok",
+        "endpoints": [
+            {
+                "path": "/process-receipt",
+                "method": "POST",
+                "description": "Process a receipt image and extract structured data"
+            },
+            {
+                "path": "/budget-chat",
+                "method": "POST", 
+                "description": "Chat with the budget planning assistant"
+            }
+        ]
     }
 
 # Run the server when executed directly
