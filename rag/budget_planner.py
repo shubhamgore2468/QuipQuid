@@ -8,6 +8,7 @@ from pydantic import BaseModel
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_anthropic import ChatAnthropic
 from langgraph.graph import StateGraph, END
+from langchain_openai import ChatOpenAI
 
 from logger import logger, log_processing_error, setup_logger
 
@@ -37,7 +38,7 @@ class GraphState(BaseModel):
 class BudgetPlanner:
     """Budget planning system using LangGraph and Claude"""
     
-    def __init__(self, api_key: str, model_name: str = "claude-3-7-sonnet-20250219", 
+    def __init__(self, api_key: str, model_name: str = "gpt-4o", 
                 postgres_connection: Optional[str] = None):
         """
         Initialize the budget planner
@@ -48,15 +49,19 @@ class BudgetPlanner:
             postgres_connection: PostgreSQL connection string
         """
         budget_logger.info("Initializing BudgetPlanner")
-        self.model_name = model_name
+        self.model = ChatOpenAI(
+            model="gpt-4o",  # or gpt-3.5-turbo
+            temperature=0,
+            openai_api_key=api_key  # use the correct variable name
+        )
         self.api_key = api_key
         self.postgres_connection = postgres_connection
         
         budget_logger.info(f"Using Claude model: {model_name}")
-        self.llm = ChatAnthropic(
+        self.llm = ChatOpenAI(
             model=model_name,
             temperature=0,
-            anthropic_api_key=api_key,
+            openai_api_key=api_key,
             max_tokens=1000
         )
         budget_logger.info("Creating workflow graph")
@@ -451,7 +456,8 @@ class BudgetPlanner:
             budget_logger.debug("Invoking workflow with user query")
             result = self.workflow.invoke({"prompt": user_query})
             budget_logger.info("Budget query processed successfully")
-            return result["response"]
+            print(f"Result: {result}")
+            return result['response']
         except Exception as e:
             error_msg = f"Error processing budget query: {str(e)}"
             log_processing_error(error_msg)

@@ -9,10 +9,10 @@ load_dotenv()
 # This is the main entry point for the application
 if __name__ == "__main__":
     # Check for environment variables
-    api_key = os.getenv("ANTHROPIC_API_KEY")
+    api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
-        logger.error("ANTHROPIC_API_KEY environment variable is not set")
-        print("Error: ANTHROPIC_API_KEY environment variable is not set")
+        logger.error("OPENAI_API_KEY environment variable is not set")
+        print("Error: OPENAI_API_KEY environment variable is not set")
         exit(1)
     
     # Get configuration from environment or use defaults

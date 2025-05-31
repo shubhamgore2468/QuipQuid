@@ -22,9 +22,9 @@ from budget_planner import BudgetPlanner
 load_dotenv()
 
 # Configure API keys
-ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
-if not ANTHROPIC_API_KEY:
-    raise ValueError("ANTHROPIC_API_KEY environment variable is not set")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+if not OPENAI_API_KEY:
+    raise ValueError("OPENAI_API_KEY environment variable is not set")
 
 # Get PostgreSQL connection string (optional)
 POSTGRES_CONNECTION = os.getenv("POSTGRESQL_URL")
@@ -78,12 +78,12 @@ app.add_middleware(
 # Dependencies to get processor instances
 def get_receipt_processor():
     """Dependency that provides the ReceiptProcessor instance"""
-    return ReceiptProcessor(api_key=ANTHROPIC_API_KEY)
+    return ReceiptProcessor(api_key=OPENAI_API_KEY)
 
 def get_budget_planner():
     """Dependency that provides the BudgetPlanner instance"""
     return BudgetPlanner(
-        api_key=ANTHROPIC_API_KEY,
+        api_key=OPENAI_API_KEY,
         postgres_connection=POSTGRES_CONNECTION
     )
 
@@ -105,6 +105,7 @@ async def budget_chat(
         Response to the user's budget query
     """
     try:
+        print(request)
         logger.info(f"Received budget chat: {request.message}")
         
         # Process the message

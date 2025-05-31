@@ -5,6 +5,7 @@ from langchain_anthropic import ChatAnthropic
 from langchain_core.messages import HumanMessage, AIMessage
 from langgraph.graph import StateGraph, add_messages
 from logger import logger, log_processing_error
+from langchain_openai import ChatOpenAI
 
 class State(TypedDict):
     """State schema for the receipt processing workflow"""
@@ -22,12 +23,18 @@ class ReceiptProcessor:
             api_key: Anthropic API key
             model_name: Claude model name to use
         """
-        self.model = ChatAnthropic(
-            model=model_name,
+        # self.model = ChatOpenAI(
+        #     model=model_name,
+        #     temperature=0,
+        #     OPENAI_API_KEY=api_key,
+        #     max_tokens=1000
+        # )
+        self.model = ChatOpenAI(
+            model="gpt-4o",  # or gpt-3.5-turbo
             temperature=0,
-            anthropic_api_key=api_key,
-            max_tokens=1000
+            openai_api_key=api_key  # use the correct variable name
         )
+
         self.workflow = self._create_workflow()
     
     def _process_receipt(self, state: State) -> Dict[str, Any]:
