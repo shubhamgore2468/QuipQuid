@@ -1,93 +1,100 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { useState, useRef } from "react"
-import { Send, Mic, Smile, ImageIcon, X } from "lucide-react"
-import { useRouter } from "next/navigation"
+import type React from "react";
+import { useState, useRef } from "react";
+import { Send, Mic, Smile, ImageIcon, X } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface ChatBarProps {
-  onChatOpen?: () => void
+  onChatOpen?: () => void;
 }
 
 export function ChatBar({ onChatOpen }: ChatBarProps) {
-  const router = useRouter()
-  const [message, setMessage] = useState("")
-  const [isRecording, setIsRecording] = useState(false)
-  const [selectedImage, setSelectedImage] = useState<File | null>(null)
-  const [imagePreview, setImagePreview] = useState<string | null>(null)
-  const fileInputRef = useRef<HTMLInputElement>(null)
+  const router = useRouter();
+  const [message, setMessage] = useState("");
+  const [isRecording, setIsRecording] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Open chat when user starts typing
   const handleInputFocus = () => {
     if (onChatOpen) {
-      onChatOpen()
+      onChatOpen();
     } else {
-      router.push("/chat")
+      router.push("/chat");
     }
-  }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     if (message.trim() || selectedImage) {
-      console.log("Message sent:", message)
-      console.log("Image sent:", selectedImage)
-      setMessage("")
-      setSelectedImage(null)
-      setImagePreview(null)
+      console.log("Message sent:", message);
+      console.log("Image sent:", selectedImage);
+      setMessage("");
+      setSelectedImage(null);
+      setImagePreview(null);
 
       // Navigate to chat page if not already there
-      router.push("/chat")
+      router.push("/chat");
     }
-  }
+  };
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0]
-      setSelectedImage(file)
+      const file = e.target.files[0];
+      setSelectedImage(file);
 
       // Create preview URL
-      const reader = new FileReader()
+      const reader = new FileReader();
       reader.onload = (event) => {
-        setImagePreview(event.target?.result as string)
-      }
-      reader.readAsDataURL(file)
+        setImagePreview(event.target?.result as string);
+      };
+      reader.readAsDataURL(file);
 
       // Navigate to chat page
-      router.push("/chat")
+      router.push("/chat");
     }
-  }
+  };
 
   const handleVoiceInput = () => {
     if (!isRecording) {
       // Start recording
-      setIsRecording(true)
+      setIsRecording(true);
 
       // Navigate to chat page
-      router.push("/chat")
+      router.push("/chat");
 
       // This is a placeholder for actual voice recording functionality
-      console.log("Voice recording started")
+      console.log("Voice recording started");
     } else {
       // Stop recording
-      setIsRecording(false)
-      console.log("Voice recording stopped")
+      setIsRecording(false);
+      console.log("Voice recording stopped");
     }
-  }
+  };
 
   const clearImage = () => {
-    setSelectedImage(null)
-    setImagePreview(null)
+    setSelectedImage(null);
+    setImagePreview(null);
     if (fileInputRef.current) {
-      fileInputRef.current.value = ""
+      fileInputRef.current.value = "";
     }
-  }
+  };
 
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-gradient-to-r from-theme-navy/90 to-theme-navy/80 backdrop-blur-sm border-t border-theme-navy/30 z-30 ml-0 lg:ml-64">
-      <form onSubmit={handleSubmit} className="container mx-auto p-3 flex flex-col">
+      <form
+        onSubmit={handleSubmit}
+        className="container mx-auto p-3 flex flex-col"
+      >
         {imagePreview && (
           <div className="mb-2 relative inline-block">
-            <img src={imagePreview || "/placeholder.svg"} alt="Selected" className="h-20 rounded-md object-cover" />
+            <img
+              src={imagePreview || "/placeholder.svg"}
+              alt="Selected"
+              className="h-20 rounded-md object-cover"
+            />
             <button
               type="button"
               onClick={clearImage}
@@ -99,7 +106,13 @@ export function ChatBar({ onChatOpen }: ChatBarProps) {
         )}
 
         <div className="flex items-center gap-2">
-          <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={handleImageSelect} />
+          <input
+            type="file"
+            accept="image/*"
+            className="hidden"
+            ref={fileInputRef}
+            onChange={handleImageSelect}
+          />
 
           <button
             type="button"
@@ -116,7 +129,7 @@ export function ChatBar({ onChatOpen }: ChatBarProps) {
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               onFocus={handleInputFocus}
-              placeholder="Ask about your finances..."
+              placeholder="Ask about your finances...not floating"
               className="w-full py-2 px-4 bg-white/20 text-white placeholder-white/70 rounded-full focus:outline-none focus:ring-2 focus:ring-white/50"
             />
             <button
@@ -131,7 +144,11 @@ export function ChatBar({ onChatOpen }: ChatBarProps) {
           <button
             type="button"
             onClick={handleVoiceInput}
-            className={`p-2 rounded-full ${isRecording ? "bg-theme-orange text-white" : "text-white/80 hover:text-white hover:bg-white/10"}`}
+            className={`p-2 rounded-full ${
+              isRecording
+                ? "bg-theme-orange text-white"
+                : "text-white/80 hover:text-white hover:bg-white/10"
+            }`}
           >
             <Mic size={20} />
             <span className="sr-only">Voice input</span>
@@ -148,5 +165,5 @@ export function ChatBar({ onChatOpen }: ChatBarProps) {
         </div>
       </form>
     </div>
-  )
+  );
 }

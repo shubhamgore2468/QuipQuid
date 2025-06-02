@@ -1,29 +1,29 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState, useEffect } from "react"
-import { ThemeToggle } from "@/components/theme-toggle"
-import { useTheme } from "next-themes"
-import { FloatingChatBar } from "@/components/floating-chat-bar"
+import { useState, useEffect } from "react";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { useTheme } from "next-themes";
+import { FloatingChatBar } from "@/components/floating-chat-bar";
 
 export default function SettingsPage() {
-  const { theme, setTheme } = useTheme()
-  const [mounted, setMounted] = useState(false)
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
 
   // Wait for component to mount to avoid hydration mismatch
   useEffect(() => {
-    setMounted(true)
-  }, [])
+    setMounted(true);
+  }, []);
 
   const handleThemeChange = (selectedTheme: string) => {
-    setTheme(selectedTheme)
-  }
+    setTheme(selectedTheme);
+  };
 
   return (
     <>
       <div className="container mx-auto p-4 md:p-6">
-        <div className="bg-gradient-to-r from-coastal-dark to-coastal-teal rounded-lg p-6 mb-6 text-white shadow-lg">
+        <div className="bg-gradient-to-r from-coastal-dark to-coastal-teal rounded-lg p-6 mb-6 dark:text-white shadow-lg">
           <h1 className="text-3xl font-bold">Settings</h1>
           <p className="mt-2 opacity-90">Customize your account preferences</p>
         </div>
@@ -133,7 +133,11 @@ export default function SettingsPage() {
                     ].map((color) => (
                       <button
                         key={color.name}
-                        className={`w-8 h-8 rounded-full relative ${color.selected ? "ring-2 ring-offset-2 ring-coastal-dark/30 dark:ring-coastal-teal/60" : ""}`}
+                        className={`w-8 h-8 rounded-full relative ${
+                          color.selected
+                            ? "ring-2 ring-offset-2 ring-coastal-dark/30 dark:ring-coastal-teal/60"
+                            : ""
+                        }`}
                         style={{ backgroundColor: color.color }}
                         title={color.name}
                       >
@@ -172,7 +176,9 @@ export default function SettingsPage() {
               <form className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium mb-1">First Name</label>
+                    <label className="block text-sm font-medium mb-1">
+                      First Name
+                    </label>
                     <input
                       type="text"
                       defaultValue="John"
@@ -180,7 +186,9 @@ export default function SettingsPage() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-1">Last Name</label>
+                    <label className="block text-sm font-medium mb-1">
+                      Last Name
+                    </label>
                     <input
                       type="text"
                       defaultValue="Doe"
@@ -190,7 +198,9 @@ export default function SettingsPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-1">Email</label>
+                  <label className="block text-sm font-medium mb-1">
+                    Email
+                  </label>
                   <input
                     type="email"
                     defaultValue="john.doe@example.com"
@@ -222,14 +232,14 @@ export default function SettingsPage() {
       </div>
       <FloatingChatBar />
     </>
-  )
+  );
 }
 
 interface ThemeOptionProps {
-  title: string
-  selected: boolean
-  onClick: () => void
-  preview: React.ReactNode
+  title: string;
+  selected: boolean;
+  onClick: () => void;
+  preview: React.ReactNode;
 }
 
 function ThemeOption({ title, selected, onClick, preview }: ThemeOptionProps) {
@@ -245,8 +255,10 @@ function ThemeOption({ title, selected, onClick, preview }: ThemeOptionProps) {
       <div className="h-24 mb-2">{preview}</div>
       <div className="flex items-center justify-between">
         <span className="font-medium">{title}</span>
-        {selected && <div className="w-4 h-4 rounded-full bg-coastal-teal"></div>}
+        {selected && (
+          <div className="w-4 h-4 rounded-full bg-coastal-teal"></div>
+        )}
       </div>
     </div>
-  )
+  );
 }

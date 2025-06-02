@@ -1,29 +1,29 @@
-"use client"
+"use client";
 
-import { useState, useRef, useEffect } from "react"
-import { ArrowLeft, Bot, User, Search, History, X } from "lucide-react"
-import { useRouter } from "next/navigation"
-import { FloatingChatBar } from "@/components/floating-chat-bar"
+import { useState, useRef, useEffect } from "react";
+import { ArrowLeft, Bot, User, Search, History, X } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { FloatingChatBar } from "@/components/floating-chat-bar";
 
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 interface Message {
-  id: string
-  content: string
-  sender: "user" | "assistant"
-  timestamp: Date
-  image?: string
-  isStreaming?: boolean
+  id: string;
+  content: string;
+  sender: "user" | "assistant";
+  timestamp: Date;
+  image?: string;
 }
 
 interface ChatSession {
-  id: string
-  title: string
-  preview: string
-  date: string
-  unread?: boolean
+  id: string;
+  title: string;
+  preview: string;
+  date: string;
+  unread?: boolean;
 }
 
 export default function ChatPage() {
-  const router = useRouter()
+  const router = useRouter();
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
@@ -31,8 +31,9 @@ export default function ChatPage() {
       sender: "assistant",
       timestamp: new Date(),
     },
-  ])
-  const [showMobileHistory, setShowMobileHistory] = useState(false)
+  ]);
+  const [showMobileHistory, setShowMobileHistory] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [chatSessions, setChatSessions] = useState<ChatSession[]>([
     {
@@ -66,113 +67,200 @@ export default function ChatPage() {
       preview: "I want to pay off my credit card debt...",
       date: "Apr 25",
     },
-  ])
+  ]);
 
-  const messagesEndRef = useRef<HTMLDivElement>(null)
-
-  // Simulate streaming effect when a new message is added
-  useEffect(() => {
-    const lastMessage = messages[messages.length - 1]
-
-    if (lastMessage && lastMessage.isStreaming) {
-      const fullContent = lastMessage.content
-      let currentContent = ""
-      let charIndex = 0
-
-      const streamInterval = setInterval(() => {
-        if (charIndex < fullContent.length) {
-          currentContent += fullContent[charIndex]
-          charIndex++
-
-          setMessages((prev) =>
-            prev.map((msg) => (msg.id === lastMessage.id ? { ...msg, content: currentContent } : msg)),
-          )
-        } else {
-          clearInterval(streamInterval)
-          setMessages((prev) => prev.map((msg) => (msg.id === lastMessage.id ? { ...msg, isStreaming: false } : msg)))
-        }
-      }, 30) // Adjust speed as needed
-
-      return () => clearInterval(streamInterval)
-    }
-  }, [messages])
-
-  // Simulate receiving a response when a new user message is added
-  useEffect(() => {
-    const lastMessage = messages[messages.length - 1]
-
-    if (lastMessage && lastMessage.sender === "user") {
-      // Wait a moment before "assistant" responds
-      const timeout = setTimeout(() => {
-        let responseContent = ""
-
-        if (lastMessage.content.toLowerCase().includes("budget")) {
-          responseContent =
-            "I can help you create a budget! First, let's analyze your income and expenses. What's your monthly income?"
-        } else if (lastMessage.content.toLowerCase().includes("invest")) {
-          responseContent =
-            "Investment is a great way to grow your wealth! Based on your risk profile, I can suggest some investment options. Would you prefer low-risk, medium-risk, or high-risk investments?"
-        } else if (lastMessage.image) {
-          responseContent =
-            "I see you've shared an image. It looks like a receipt. Would you like me to analyze your spending or add these expenses to your budget tracker?"
-        } else {
-          responseContent =
-            "Thanks for your message! I'm here to help with any financial questions you might have. Could you provide more details about what you're looking for?"
-        }
-
-        setMessages((prev) => [
-          ...prev,
-          {
-            id: Date.now().toString(),
-            content: responseContent,
-            sender: "assistant",
-            timestamp: new Date(),
-            isStreaming: true,
-          },
-        ])
-      }, 1000)
-
-      return () => clearTimeout(timeout)
-    }
-  }, [messages])
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Scroll to bottom when messages change
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }, [messages])
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   // Close mobile history when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as HTMLElement
-      if (showMobileHistory && !target.closest(".chat-history-sidebar") && !target.closest(".history-toggle-btn")) {
-        setShowMobileHistory(false)
+      const target = event.target as HTMLElement;
+      if (
+        showMobileHistory &&
+        !target.closest(".chat-history-sidebar") &&
+        !target.closest(".history-toggle-btn")
+      ) {
+        setShowMobileHistory(false);
       }
-    }
+    };
 
-    document.addEventListener("mousedown", handleClickOutside)
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
-  }, [showMobileHistory])
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showMobileHistory]);
 
   const toggleMobileHistory = () => {
-    setShowMobileHistory(!showMobileHistory)
-  }
+    setShowMobileHistory(!showMobileHistory);
+  };
+
+  // Function to send text message to backend API
+  // Function to send text message to backend API
+  const sendTextMessage = async (content: string) => {
+    console.log("Sending text message:", content);
+    console.log("json.strigify", JSON.stringify(content));
+    try {
+      const response = await fetch(BASE_URL + "/budget-chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: content,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data.response;
+    } catch (error) {
+      console.error("Error sending text message:", error);
+      return "Sorry, I couldn't process your request. Please try again.";
+    }
+  };
+
+  const sendImageMessage = async (content: string, imageFile: File) => {
+    try {
+      const formData = new FormData();
+      formData.append("file", imageFile);
+
+      // Show a loading message in the chat
+      const loadingMessage =
+        "Processing your receipt... This may take a moment.";
+
+      // Display the loading message to the user
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now().toString() + "-loading",
+          content: loadingMessage,
+          sender: "assistant",
+          timestamp: new Date(),
+        },
+      ]);
+
+      const response = await fetch(BASE_URL + "/process-receipt", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+
+      const receiptData = await response.json();
+
+      // Format the response for display in chat
+      const { merchant_name, total, date, items } = receiptData;
+      const formattedResponse = `I've analyzed your receipt from ${merchant_name} for $${total.toFixed(
+        2
+      )} on ${date}. I found ${
+        items.length
+      } items. Redirecting you to the splits page.`;
+
+      // Replace the loading message with the actual response
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg.id.includes("-loading")
+            ? { ...msg, id: Date.now().toString(), content: formattedResponse }
+            : msg
+        )
+      );
+
+      // Store the complete receipt data in localStorage
+      localStorage.setItem("receiptData", JSON.stringify(receiptData));
+
+      // Set a timeout to allow the response to be displayed before redirecting
+      setTimeout(() => {
+        router.push("/split");
+      }, 3000);
+
+      return formattedResponse;
+    } catch (error) {
+      console.error("Error sending image message:", error);
+
+      // Replace loading message with error message if there is one
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg.id.includes("-loading")
+            ? {
+                ...msg,
+                id: Date.now().toString(),
+                content:
+                  "Sorry, I couldn't process your receipt. Please try again with a clearer image.",
+              }
+            : msg
+        )
+      );
+
+      return "Sorry, I couldn't process your receipt. Please try again with a clearer image.";
+    }
+  };
 
   // Function to handle new messages from the chat bar
-  const handleNewMessage = (content: string, image?: string) => {
+  const handleNewMessage = async (content: string, image?: File) => {
+    // Add user message to chat
+    const userMessageId = Date.now().toString();
+
+    // Create user message object
+    const userMessage: Message = {
+      id: userMessageId,
+      content,
+      sender: "user",
+      timestamp: new Date(),
+    };
+
+    // If there's an image, create preview and add to message
+    if (image) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setMessages((prev) =>
+          prev.map((msg) =>
+            msg.id === userMessageId
+              ? { ...msg, image: event.target?.result as string }
+              : msg
+          )
+        );
+      };
+      reader.readAsDataURL(image);
+    }
+
+    // Add user message to chat
+    setMessages((prev) => [...prev, userMessage]);
+
+    // Show loading state
+    setIsLoading(true);
+
+    // Send to appropriate backend endpoint based on input type
+    let assistantResponse;
+    if (image) {
+      assistantResponse = await sendImageMessage(content, image);
+    } else {
+      assistantResponse = await sendTextMessage(content);
+    }
+
+    // Add assistant response to chat
     setMessages((prev) => [
       ...prev,
       {
         id: Date.now().toString(),
-        content,
-        sender: "user",
+        content: assistantResponse,
+        sender: "assistant",
         timestamp: new Date(),
-        image,
       },
-    ])
-  }
+    ]);
+
+    // Hide loading state
+    setIsLoading(false);
+  };
 
   return (
     <div className="flex h-full">
@@ -181,12 +269,17 @@ export default function ChatPage() {
         {/* Chat header */}
         <div className="bg-gradient-to-r from-theme-navy to-theme-navyLight p-4 text-white flex items-center justify-between">
           <div className="flex items-center">
-            <button onClick={() => router.back()} className="mr-4 p-2 rounded-full hover:bg-white/10">
+            <button
+              onClick={() => router.back()}
+              className="mr-4 p-2 rounded-full hover:bg-white/10"
+            >
               <ArrowLeft size={20} />
             </button>
             <div>
               <h2 className="font-bold text-lg">Financial Assistant</h2>
-              <p className="text-sm opacity-80">Ask me anything about your finances</p>
+              <p className="text-sm opacity-80">
+                Ask me anything about your finances
+              </p>
             </div>
           </div>
 
@@ -204,7 +297,12 @@ export default function ChatPage() {
         <div className="flex-1 overflow-y-auto p-4 bg-gradient-to-br from-white to-theme-navy/5 dark:from-theme-navy dark:to-theme-navy/80">
           <div className="max-w-3xl mx-auto space-y-4">
             {messages.map((message) => (
-              <div key={message.id} className={`flex ${message.sender === "user" ? "justify-end" : "justify-start"}`}>
+              <div
+                key={message.id}
+                className={`flex ${
+                  message.sender === "user" ? "justify-end" : "justify-start"
+                }`}
+              >
                 <div
                   className={`
                   flex items-start gap-3 max-w-[80%]
@@ -214,10 +312,18 @@ export default function ChatPage() {
                   <div
                     className={`
                     w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0
-                    ${message.sender === "user" ? "bg-theme-orange" : "bg-theme-navy text-white"}
+                    ${
+                      message.sender === "user"
+                        ? "bg-theme-orange"
+                        : "bg-theme-navy text-white"
+                    }
                   `}
                   >
-                    {message.sender === "user" ? <User size={16} className="text-white" /> : <Bot size={16} />}
+                    {message.sender === "user" ? (
+                      <User size={16} className="text-white" />
+                    ) : (
+                      <Bot size={16} />
+                    )}
                   </div>
 
                   <div
@@ -243,21 +349,53 @@ export default function ChatPage() {
                     <div
                       className={`
                       text-xs mt-1
-                      ${message.sender === "user" ? "text-white/70" : "text-theme-navy/60 dark:text-white/60"}
+                      ${
+                        message.sender === "user"
+                          ? "text-white/70"
+                          : "text-theme-navy/60 dark:text-white/60"
+                      }
                     `}
                     >
-                      {message.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                      {message.timestamp.toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
                     </div>
                   </div>
                 </div>
               </div>
             ))}
+
+            {/* Loading indicator */}
+            {isLoading && (
+              <div className="flex justify-start">
+                <div className="flex items-start gap-3 max-w-[80%]">
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 bg-theme-navy text-white">
+                    <Bot size={16} />
+                  </div>
+                  <div className="rounded-lg p-3 bg-white dark:bg-theme-navy text-theme-navy dark:text-white">
+                    <div className="flex space-x-2">
+                      <div className="w-2 h-2 rounded-full bg-theme-navy/60 dark:bg-white/60 animate-bounce"></div>
+                      <div
+                        className="w-2 h-2 rounded-full bg-theme-navy/60 dark:bg-white/60 animate-bounce"
+                        style={{ animationDelay: "0.2s" }}
+                      ></div>
+                      <div
+                        className="w-2 h-2 rounded-full bg-theme-navy/60 dark:bg-white/60 animate-bounce"
+                        style={{ animationDelay: "0.4s" }}
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
             <div ref={messagesEndRef} />
           </div>
         </div>
 
-        {/* Keep the chat bar at the bottom */}
-        <FloatingChatBar />
+        {/* Chat input component - pass the handler to it */}
+        <FloatingChatBar onSendMessage={handleNewMessage} />
       </div>
 
       {/* Desktop chat history sidebar */}
@@ -279,14 +417,20 @@ export default function ChatPage() {
             <div
               key={session.id}
               className={`p-3 border-b border-theme-navy/10 dark:border-white/10 hover:bg-theme-navy/5 dark:hover:bg-theme-navy/40 cursor-pointer ${
-                session.id === "current" ? "bg-theme-orange/10 dark:bg-theme-orange/20" : ""
+                session.id === "current"
+                  ? "bg-theme-orange/10 dark:bg-theme-orange/20"
+                  : ""
               }`}
             >
               <div className="flex justify-between items-start">
                 <h3 className="font-medium">{session.title}</h3>
-                <span className="text-xs text-theme-navy/60 dark:text-white/60">{session.date}</span>
+                <span className="text-xs text-theme-navy/60 dark:text-white/60">
+                  {session.date}
+                </span>
               </div>
-              <p className="text-sm text-theme-navy/60 dark:text-white/60 truncate mt-1">{session.preview}</p>
+              <p className="text-sm text-theme-navy/60 dark:text-white/60 truncate mt-1">
+                {session.preview}
+              </p>
               {session.unread && (
                 <div className="mt-1 flex justify-end">
                   <span className="w-2 h-2 bg-theme-orange rounded-full"></span>
@@ -332,15 +476,21 @@ export default function ChatPage() {
               <div
                 key={session.id}
                 className={`p-3 border-b border-theme-navy/10 dark:border-white/10 hover:bg-theme-navy/5 dark:hover:bg-theme-navy/40 cursor-pointer ${
-                  session.id === "current" ? "bg-theme-orange/10 dark:bg-theme-orange/20" : ""
+                  session.id === "current"
+                    ? "bg-theme-orange/10 dark:bg-theme-orange/20"
+                    : ""
                 }`}
                 onClick={() => setShowMobileHistory(false)}
               >
                 <div className="flex justify-between items-start">
                   <h3 className="font-medium">{session.title}</h3>
-                  <span className="text-xs text-theme-navy/60 dark:text-white/60">{session.date}</span>
+                  <span className="text-xs text-theme-navy/60 dark:text-white/60">
+                    {session.date}
+                  </span>
                 </div>
-                <p className="text-sm text-theme-navy/60 dark:text-white/60 truncate mt-1">{session.preview}</p>
+                <p className="text-sm text-theme-navy/60 dark:text-white/60 truncate mt-1">
+                  {session.preview}
+                </p>
                 {session.unread && (
                   <div className="mt-1 flex justify-end">
                     <span className="w-2 h-2 bg-theme-orange rounded-full"></span>
@@ -358,5 +508,5 @@ export default function ChatPage() {
         </div>
       )}
     </div>
-  )
+  );
 }
