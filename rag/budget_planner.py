@@ -456,7 +456,7 @@ class BudgetPlanner:
             budget_logger.debug("Invoking workflow with user query")
             result = self.workflow.invoke({"prompt": user_query})
             budget_logger.info("Budget query processed successfully")
-            print(f"Result: {result}")
+            print(f"Result: {result['response']}")
             return result['response']
         except Exception as e:
             error_msg = f"Error processing budget query: {str(e)}"

@@ -1,0 +1,75 @@
+name: Deploy Backend to GCP Cloud Run
+
+on:
+  push:
+    branches: [open_ai]
+    paths:
+      - "backend/**"
+      - ".github/workflows/backend.yml"
+
+env:
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  SERVICE_NAME: "quipquid-backend"
+  REGION: "us-central1"
+  GITHUB_SHA: ${{ github.sha }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/open_ai'
+
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+
+      - name: Set up Cloud SDK
+        uses: gclopud auth configure-docker
+
+      - name: Build Docker image
+        working-directory: ./backend
+        run: |
+          docker build -t gcr.io/$PROJECT_ID/$SERVICE_NAME:GITHUB_SHA .
+          docker tag gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA gcr.io/$PROJECT_ID/$SERVICE_NAME:latest
+      - name: Push docker image
+        run: |
+          docker push gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA
+          docker push gcr.io/$PROJECT_ID/$SERVICE_NAME:latest
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy $SERVICE_NAME \
+            --image gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA \
+            --region $REGION \
+            --platform managed \
+            --allow-unauthenticated \
+            --project $PROJECT_ID \
+            --quiet
+            --port 8000
+            --set-secrets="POSTGRESQL_URL=POSTGRESQL_URL:latest" \
+            --set-secrets="MONGODB_URL=MONGODB_URL:latest" \
+            --set-secrets="ANTHROPIC_API_KEY=ANTHROPIC_API_KEY:latest"
+      - name: Get service URL
+        id: service-url
+        run: |
+          URL=$(gcloud run services describe $describe $service_NAME --region=$REGION --format='value(status.url)')
+          echo "url=$URL" >> $GITHUB_OUTPUT
+      - name: Update Deployment status
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.repos.createDeploymentStatus({
+            owner: context.repo.owner,
+            repo: context.repo.repo
+            deployment_id: context.payload.deployment?.id || 0,
+            state: 'success,
+            environment_url: '${{steps.service-url.outputs.url}}',
+            description: 'Deployment to Cloud Run successful',
+            });
