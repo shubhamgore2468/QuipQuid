@@ -31,12 +31,12 @@ jobs:
           credentials_json: ${{ secrets.GCP_CREDENTIALS }}
 
       - name: Set up Cloud SDK
-        uses: gclopud auth configure-docker
+        uses: gcloud auth configure-docker
 
       - name: Build Docker image
         working-directory: ./backend
         run: |
-          docker build -t gcr.io/$PROJECT_ID/$SERVICE_NAME:GITHUB_SHA .
+          docker build -t gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA .
           docker tag gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA gcr.io/$PROJECT_ID/$SERVICE_NAME:latest
       - name: Push docker image
         run: |
@@ -59,7 +59,7 @@ jobs:
       - name: Get service URL
         id: service-url
         run: |
-          URL=$(gcloud run services describe $describe $service_NAME --region=$REGION --format='value(status.url)')
+          URL=$(gcloud run services describe "$SERVICE_NAME" --region=$REGION --format='value(status.url)')
           echo "url=$URL" >> $GITHUB_OUTPUT
       - name: Update Deployment status
         uses: actions/github-script@v7
