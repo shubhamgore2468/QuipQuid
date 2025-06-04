@@ -31,7 +31,9 @@ jobs:
           credentials_json: ${{ secrets.GCP_CREDENTIALS }}
 
       - name: Set up Cloud SDK
-        uses: gcloud auth configure-docker
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ env.PROJECT_ID }}
 
       - name: Build Docker image
         working-directory: ./backend
@@ -69,7 +71,7 @@ jobs:
             owner: context.repo.owner,
             repo: context.repo.repo
             deployment_id: context.payload.deployment?.id || 0,
-            state: 'success,
+            state: 'success',
             environment_url: '${{steps.service-url.outputs.url}}',
             description: 'Deployment to Cloud Run successful',
             });
