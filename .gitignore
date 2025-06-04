@@ -7,7 +7,3 @@ logs/
 *.log
 *.log.*
 
-/backend/requirements.txt
-
-
-/rag/requirements.txt
