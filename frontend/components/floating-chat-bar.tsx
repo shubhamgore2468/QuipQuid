@@ -86,7 +86,7 @@ export function FloatingChatBar({ onSendMessage }: FloatingChatBarProps) {
   };
 
   return (
-    <div className="fixed bottom-20 md:bottom-6 left-0 right-0 z-50 px-4 md:px-6 ">
+    <div className="fixed bottom-20 md:bottom-6 left-1/2 transform -translate-x-1/2 w-[55%] z-50 px-4 md:px-6 ">
       <div className="bg-gradient-to-r from-theme-navy to-theme-navyLight p-3 shadow-lg border-t rounded-full border-theme-navy/10 dark:border-white/10">
         <form onSubmit={handleSubmit} className="max-w-3xl mx-auto">
           {imagePreview && (
